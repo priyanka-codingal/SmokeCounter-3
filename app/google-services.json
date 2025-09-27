@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "856474999158",
+    "project_id": "smoke-counter-14e92",
+    "storage_bucket": "smoke-counter-14e92.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856474999158:android:59220993ea9db5f7e1c257",
+        "android_client_info": {
+          "package_name": "com.example.smokecounter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "856474999158-6cjocj8r2duaoevsh7tt94i3md1b77cb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smokecounter",
+            "certificate_hash": "76a222879b8be68da904e167e71f813f0f9c2f7e"
+          }
+        },
+        {
+          "client_id": "856474999158-9kv7dudgng3d0eg1t4t2d78qm4vaph4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-G4enMxAv6jzZXBExa1M90ZD3_OlbxuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "856474999158-9kv7dudgng3d0eg1t4t2d78qm4vaph4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
