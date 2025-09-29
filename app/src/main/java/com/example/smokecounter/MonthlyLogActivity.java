@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 
 public class MonthlyLogActivity extends AppCompatActivity {
@@ -22,10 +25,11 @@ public class MonthlyLogActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_monthly_log);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        String userId = smokeManager != null ? smokeManager.getUserId() : "default_user";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = (user != null) ? user.getUid() : "default_user";
+
         smokeManager = SmokeManager.getInstance(this, userId);
 
-        // Fetch monthly logs
         List<SmokeManager.DailyLog> logs = smokeManager.getMonthlyLogs();
 
         logAdapter = new LogAdapter(logs);

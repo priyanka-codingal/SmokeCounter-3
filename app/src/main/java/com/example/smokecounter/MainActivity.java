@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,32 +25,26 @@ public class MainActivity extends AppCompatActivity {
         Button monthlyLogBtn = findViewById(R.id.btn_monthly_log);
         Button logoutBtn = findViewById(R.id.btn_logout);
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser() != null
-                ? FirebaseAuth.getInstance().getCurrentUser().getUid()
-                : "default_user";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = (user != null) ? user.getUid() : "default_user";
 
         smokeManager = SmokeManager.getInstance(this, userId);
 
         updateCountDisplay();
 
-        // Add cigarette
         addBtn.setOnClickListener(v -> {
             smokeManager.increment();
             updateCountDisplay();
         });
 
-        // Monthly log (open new activity)
         monthlyLogBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MonthlyLogActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, MonthlyLogActivity.class));
         });
 
-        // Logout
         logoutBtn.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, LoginActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
         });
     }

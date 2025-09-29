@@ -35,8 +35,9 @@
         android:id="@+id/buttonSendOtp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send OTP"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="12dp"
+        android:background="#F44336"
+        android:text="Send OTP" />
 
     <!-- OTP input and verify button layout -->
     <LinearLayout

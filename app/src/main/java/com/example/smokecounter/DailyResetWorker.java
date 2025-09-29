@@ -1,12 +1,14 @@
 package com.example.smokecounter;
 
 import android.content.Context;
-import android.telephony.SmsManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,60 +16,31 @@ import java.util.Locale;
 
 public class DailyResetWorker extends Worker {
 
-    private static final String TAG = "DailyResetWorker";
-
-    public DailyResetWorker(@NonNull Context context, @NonNull WorkerParameters params) {
-        super(context, params);
+    public DailyResetWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        // Get userId passed via Data
-        String userId = getInputData().getString("userId");
-        if (userId == null) {
-            Log.e(TAG, "UserId not provided");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            Log.e("DailyResetWorker", "No user logged in, cannot reset count.");
             return Result.failure();
         }
 
+        String userId = user.getUid();
         SmokeManager smokeManager = SmokeManager.getInstance(getApplicationContext(), userId);
 
-        int count = smokeManager.getCount();
-
-        // Send SMS based on range
-        sendSmsBasedOnRange(count);
-
-        // Log today count
+        // Save today's count before resetting (already stored in log_key)
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        smokeManager.logDaily(today, count);
+        int todayCount = smokeManager.getCount();
+        Log.i("DailyResetWorker", "User: " + userId + ", Date: " + today + ", Count saved: " + todayCount);
 
-        // Reset daily count
+        // Reset today's count for a fresh start tomorrow
         smokeManager.resetDailyCount();
 
         return Result.success();
-    }
-
-    private void sendSmsBasedOnRange(int count) {
-        // Replace with user's phone number
-        String phoneNumber = "USER_PHONE_NUMBER";
-
-        String message;
-        if (count >= 1 && count <= 5) {
-            message = "You smoked " + count + " cigarettes today. Try to reduce.";
-        } else if (count >= 6 && count <= 10) {
-            message = "You smoked " + count + " cigarettes today. Consider stopping soon!";
-        } else if (count > 10) {
-            message = "High alert! You smoked " + count + " cigarettes today.";
-        } else {
-            message = "No cigarettes today. Great job!";
-        }
-
-        try {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-            Log.d(TAG, "SMS sent to " + phoneNumber + ": " + message);
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to send SMS", e);
-        }
     }
 }

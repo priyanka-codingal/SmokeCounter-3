@@ -33,13 +33,15 @@ public class DailyWorker extends Worker {
         String userId = user.getUid();
         SmokeManager smokeManager = SmokeManager.getInstance(getApplicationContext(), userId);
 
-        // Example: get today’s date
+        // Get today’s date (optional, for logging)
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-        // For now, assume we tracked a count somewhere (can be passed via Data or SharedPrefs)
-        int count = getInputData().getInt("dailyCount", 0);
+        // Get today's count
+        int todayCount = smokeManager.getCount();
 
-        smokeManager.logDaily(today, count);
+        // We don’t need logDaily(); the daily count is already stored under "log_YYYY-MM-DD"
+        // Just ensure it’s persisted (increment already saves it in SharedPreferences)
+        Log.i("DailyWorker", "User: " + userId + ", Date: " + today + ", Count: " + todayCount);
 
         return Result.success();
     }
